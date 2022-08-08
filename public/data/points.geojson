@@ -1,0 +1,25 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "User Conference"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-117.16253757476805, 32.70692784072598]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Coronado Island"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-117.17227935791016, 32.69862194228112]
+      }
+    }
+  ]
+}
