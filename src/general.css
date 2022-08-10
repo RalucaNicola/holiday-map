@@ -86,7 +86,10 @@ img {
 
 #section-8 .left-image,
 #section-8 .middle-image,
-#section-8 .right-image {
+#section-8 .right-image,
+#section-7 .left-image,
+#section-7 .middle-image,
+#section-7 .right-image {
   max-width: 30%;
 }
 
@@ -131,7 +134,7 @@ section h3,
 section p,
 section .annotation {
   width: min(800px, 80%);
-  margin: 0 auto;
+  margin: 0 auto 20px;
 }
 
 .separator {
