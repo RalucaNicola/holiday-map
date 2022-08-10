@@ -11,6 +11,7 @@ import {SimpleMarkerSymbol, TextSymbol} from "@arcgis/core/symbols";
 import LabelClass from "@arcgis/core/layers/support/LabelClass";
 import esriConfig from "@arcgis/core/config";
 import Compass from "@arcgis/core/widgets/Compass";
+import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 
 // esriConfig.fontsUrl =
 //   "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer/resources/fonts/Caveat%20Regular/0-255.pbf";
@@ -76,13 +77,46 @@ const filterFeatures = (filter: string) => {
 
 map.add(pois);
 
+const hikingLayer = new GeoJSONLayer({
+  url: "./data/hike.geojson",
+  renderer: new UniqueValueRenderer({
+    field: "type",
+    defaultSymbol: new SimpleLineSymbol({
+      width: 3,
+      color: [252, 169, 3],
+      style: "short-dash",
+      cap: "round",
+      join: "round",
+    }),
+    uniqueValueInfos: [
+      {
+        value: "road",
+        symbol: new SimpleLineSymbol({
+          width: 3,
+          color: [252, 169, 3],
+          style: "solid",
+          cap: "round",
+          join: "round",
+        }),
+      },
+    ],
+  }),
+  visible: false,
+});
+
+map.add(hikingLayer);
+
+const displayHike = (value: boolean) => {
+  hikingLayer.visible = value;
+};
+
 const route = new GeoJSONLayer({
   url: "./data/train-track.geojson",
   renderer: new SimpleRenderer({
     symbol: new SimpleLineSymbol({
       width: 3,
       color: [252, 169, 3],
-      style: "short-dash",
+      style: "solid",
       cap: "round",
       join: "round",
     }),
@@ -117,6 +151,13 @@ interface SectionInfo {
 let sectionsInfo: SectionInfo[] = [];
 const sectionAnimations = {
   "section-1": 0,
+  "section-3": 1,
+  "section-4": 2,
+  "section-5": 3,
+  "section-6": 4,
+  "section-8": 5,
+  "section-9": 6,
+  "section-10": 7,
 };
 let currentSectionId: null | string = null;
 let previousSectionId: null | string = null;
@@ -126,10 +167,55 @@ const setSection = (section: string) => {
     case "section-0":
       filterFeatures(`name IN ('Coronado Island', 'User Conference')`);
       view.goTo(map.bookmarks.getItemAt(0).viewpoint, {duration: 1500});
+      displayHike(false);
       break;
     case "section-1":
       filterFeatures(`1=2`);
       view.goTo(map.bookmarks.getItemAt(1).viewpoint, {duration: 1500});
+      displayHike(false);
+      break;
+    case "section-2":
+      filterFeatures(`name IN ('Hollywood Bowl', 'Griffith Observatory', 'Santa Monica beach', 'Walk of Fame')`);
+      view.goTo(map.bookmarks.getItemAt(2).viewpoint, {duration: 1500});
+      displayHike(false);
+      break;
+    case "section-3":
+      filterFeatures(`name IN ('Laguna beach')`);
+      view.goTo(map.bookmarks.getItemAt(3).viewpoint, {duration: 1500});
+      displayHike(false);
+      break;
+    case "section-4":
+      filterFeatures(`name IN ('Zuma beach')`);
+      view.goTo(map.bookmarks.getItemAt(3).viewpoint, {duration: 1500});
+      displayHike(false);
+      break;
+    case "section-5":
+      filterFeatures(`name IN ('Santa Barbara')`);
+      view.goTo(map.bookmarks.getItemAt(3).viewpoint, {duration: 1500});
+      displayHike(false);
+      break;
+    case "section-6":
+      filterFeatures(`name IN ('Pismo beach')`);
+      view.goTo(map.bookmarks.getItemAt(3).viewpoint, {duration: 1500});
+      displayHike(false);
+      break;
+    case "section-7":
+      displayHike(true);
+      filterFeatures(`name IN ('Andrew Molera State Park', 'beautiful beach')`);
+      view.goTo(map.bookmarks.getItemAt(4).viewpoint, {duration: 2500});
+      break;
+    case "section-8":
+      displayHike(false);
+      filterFeatures(`name IN ('Carmel by the Sea')`);
+      view.goTo(map.bookmarks.getItemAt(5).viewpoint, {duration: 1500});
+      break;
+    case "section-9":
+      filterFeatures(`1=2`);
+      view.goTo(map.bookmarks.getItemAt(6).viewpoint, {duration: 1500});
+      break;
+    case "section-10":
+      filterFeatures(`name IN ('Muir Woods National Monument')`);
+      view.goTo(map.bookmarks.getItemAt(6).viewpoint, {duration: 1500});
       break;
   }
 };

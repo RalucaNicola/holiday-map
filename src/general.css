@@ -79,6 +79,17 @@ img {
   max-width: 60%;
 }
 
+#section-6 .right-image,
+#section-6 .left-image {
+  max-width: 40%;
+}
+
+#section-8 .left-image,
+#section-8 .middle-image,
+#section-8 .right-image {
+  max-width: 30%;
+}
+
 .annotation {
   display: flex;
   align-items: center;
@@ -91,13 +102,18 @@ img {
   max-height: 60px;
 }
 
+.handwritten {
+  font-family: "Caveat", cursive;
+  font-size: xx-large;
+}
+
 section {
   padding: 0 40px;
   margin: 20px auto;
   box-sizing: border-box;
 }
 
-section > header {
+h2 {
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.2;
@@ -110,7 +126,8 @@ p {
   line-height: 1.65;
 }
 
-section header,
+section h2,
+section h3,
 section p,
 section .annotation {
   width: min(800px, 80%);
@@ -118,9 +135,9 @@ section .annotation {
 }
 
 .separator {
-  width: 40%;
-  margin: 40px auto 0;
-  height: 10px;
+  width: min(400px, 50%);
+  margin: 100px auto 0;
+  height: 40px;
   border-top: 1px solid rgba(0, 0, 0, 0.2);
 }
 
