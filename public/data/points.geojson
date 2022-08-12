@@ -140,6 +140,52 @@
         "type": "Point",
         "coordinates": [-122.58235931396484, 37.896530447543]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Los Angeles"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-118.25271606445312, 34.04241857075928]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-122.45223999023436, 37.749815086052884]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "Alcatraz Island"},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-122.42271423339842, 37.82632787689904]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "45th SF Marathon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-122.43031024932861, 37.80706300397684]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "Mission Dolores Park"},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-122.42719888687135, 37.76002815396025]
+      }
     }
   ]
 }

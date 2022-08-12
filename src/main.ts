@@ -1,4 +1,3 @@
-import Color from "@arcgis/core/Color";
 import MapView from "@arcgis/core/views/MapView";
 import WebMap from "@arcgis/core/WebMap";
 import GeoJSONLayer from "@arcgis/core/layers/GeoJSONLayer";
@@ -9,22 +8,22 @@ import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
 import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
 import {SimpleMarkerSymbol, TextSymbol} from "@arcgis/core/symbols";
 import LabelClass from "@arcgis/core/layers/support/LabelClass";
-import esriConfig from "@arcgis/core/config";
 import Compass from "@arcgis/core/widgets/Compass";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
+import WebScene from "@arcgis/core/WebScene";
+import SceneView from "@arcgis/core/views/SceneView";
 
-// esriConfig.fontsUrl =
-//   "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer/resources/fonts/Caveat%20Regular/0-255.pbf";
-
-const map = new WebMap({
+const map = new WebScene({
   portalItem: {
-    id: "02bae9c8de294eabaa91972b14394ecc",
+    //id: "02bae9c8de294eabaa91972b14394ecc",
+    id: "72966e78b41946d8a2d549691d972900",
   },
 });
 
-const view = new MapView({
+const view = new SceneView({
   container: "viewDiv",
   map,
+  qualityProfile: "high",
   ui: {
     components: [],
   },
@@ -41,12 +40,12 @@ const pois = new GeoJSONLayer({
   url: "./data/points.geojson",
   renderer: new SimpleRenderer({
     symbol: new SimpleMarkerSymbol({
-      color: [255, 165, 0, 1],
+      color: [255, 255, 255, 1],
       size: 8,
       style: "circle",
       outline: {
-        width: 8,
-        color: [255, 165, 0, 0.3],
+        width: 1,
+        color: [0, 0, 0, 0.5],
       },
     }),
   }),
@@ -55,11 +54,13 @@ const pois = new GeoJSONLayer({
       labelExpressionInfo: {expression: "$feature.name"},
       labelPlacement: "center-right",
       symbol: new TextSymbol({
-        color: [255, 165, 0, 1],
-        haloSize: 2,
-        haloColor: [255, 255, 255, 1],
+        color: [255, 255, 255, 1],
+        haloSize: 1,
+        haloColor: [0, 0, 0, 0.5],
         font: {
-          size: 10,
+          size: 14,
+          family: "Caveat",
+          weight: "bold",
         },
       }),
     }),
@@ -67,12 +68,14 @@ const pois = new GeoJSONLayer({
 });
 
 const filterFeatures = (filter: string) => {
-  pois.featureEffect = new FeatureEffect({
-    filter: new FeatureFilter({
-      where: filter,
-    }),
-    excludedEffect: "grayscale(100%) opacity(30%)",
-  });
+  pois.definitionExpression = filter;
+
+  // = new FeatureEffect({
+  //   filter: new FeatureFilter({
+  //     where: filter,
+  //   }),
+  //   excludedEffect: "grayscale(100%) opacity(30%)",
+  // });
 };
 
 map.add(pois);
@@ -83,7 +86,7 @@ const hikingLayer = new GeoJSONLayer({
     field: "type",
     defaultSymbol: new SimpleLineSymbol({
       width: 3,
-      color: [252, 169, 3],
+      color: [255, 255, 255],
       style: "short-dash",
       cap: "round",
       join: "round",
@@ -93,7 +96,7 @@ const hikingLayer = new GeoJSONLayer({
         value: "road",
         symbol: new SimpleLineSymbol({
           width: 3,
-          color: [252, 169, 3],
+          color: [255, 255, 255],
           style: "solid",
           cap: "round",
           join: "round",
@@ -115,7 +118,7 @@ const route = new GeoJSONLayer({
   renderer: new SimpleRenderer({
     symbol: new SimpleLineSymbol({
       width: 3,
-      color: [252, 169, 3],
+      color: [255, 255, 255],
       style: "solid",
       cap: "round",
       join: "round",
@@ -166,57 +169,58 @@ const setSection = (section: string) => {
   switch (section) {
     case "section-0":
       filterFeatures(`name IN ('Coronado Island', 'User Conference')`);
-      view.goTo(map.bookmarks.getItemAt(0).viewpoint, {duration: 1500});
       displayHike(false);
       break;
     case "section-1":
       filterFeatures(`1=2`);
-      view.goTo(map.bookmarks.getItemAt(1).viewpoint, {duration: 1500});
       displayHike(false);
       break;
     case "section-2":
       filterFeatures(`name IN ('Hollywood Bowl', 'Griffith Observatory', 'Santa Monica beach', 'Walk of Fame')`);
-      view.goTo(map.bookmarks.getItemAt(2).viewpoint, {duration: 1500});
       displayHike(false);
       break;
     case "section-3":
-      filterFeatures(`name IN ('Laguna beach')`);
-      view.goTo(map.bookmarks.getItemAt(3).viewpoint, {duration: 1500});
+      filterFeatures(`name IN ('Laguna beach', 'Los Angeles')`);
+      view.goTo(map.presentation.slides.getItemAt(3).viewpoint, {duration: 1500});
       displayHike(false);
       break;
     case "section-4":
-      filterFeatures(`name IN ('Zuma beach')`);
-      view.goTo(map.bookmarks.getItemAt(3).viewpoint, {duration: 1500});
+      filterFeatures(`name IN ('Zuma beach', 'Los Angeles')`);
       displayHike(false);
       break;
     case "section-5":
-      filterFeatures(`name IN ('Santa Barbara')`);
-      view.goTo(map.bookmarks.getItemAt(3).viewpoint, {duration: 1500});
+      filterFeatures(`name IN ('Zuma beach','Santa Barbara', 'Los Angeles')`);
       displayHike(false);
       break;
     case "section-6":
-      filterFeatures(`name IN ('Pismo beach')`);
-      view.goTo(map.bookmarks.getItemAt(3).viewpoint, {duration: 1500});
+      filterFeatures(`name IN ('Santa Barbara', 'Los Angeles', 'Pismo beach')`);
       displayHike(false);
       break;
     case "section-7":
       displayHike(true);
       filterFeatures(`name IN ('Andrew Molera State Park', 'beautiful beach')`);
-      view.goTo(map.bookmarks.getItemAt(4).viewpoint, {duration: 2500});
       break;
     case "section-8":
       displayHike(false);
       filterFeatures(`name IN ('Carmel by the Sea')`);
-      view.goTo(map.bookmarks.getItemAt(5).viewpoint, {duration: 1500});
       break;
     case "section-9":
-      filterFeatures(`1=2`);
-      view.goTo(map.bookmarks.getItemAt(6).viewpoint, {duration: 1500});
+      filterFeatures(`name IN ('Mission Dolores Park', '45th SF Marathon', 'Alcatraz Island')`);
       break;
     case "section-10":
-      filterFeatures(`name IN ('Muir Woods National Monument')`);
-      view.goTo(map.bookmarks.getItemAt(6).viewpoint, {duration: 1500});
+      filterFeatures(`name IN ('Muir Woods National Monument', 'San Francisco')`);
       break;
+  }
+
+  if (section) {
+    view.goTo(
+      map.presentation.slides
+        .filter(s => {
+          return s.title.text === section;
+        })
+        .getItemAt(0).viewpoint,
+      {duration: 1500}
+    );
   }
 };
 
