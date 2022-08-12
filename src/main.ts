@@ -262,3 +262,20 @@ window.onscroll = e => {
   calculateSectionsInfo();
   render();
 };
+
+document.querySelectorAll(".media>img").forEach(element => {
+  element.addEventListener("click", evt => {
+    const modal = document.querySelector(".full-screen-modal") as HTMLElement;
+    modal.classList.add("visible-full-screen-modal");
+    const imageChild = (evt.target as HTMLImageElement).cloneNode(true);
+    modal.appendChild(imageChild);
+    modal.addEventListener(
+      "click",
+      evt => {
+        modal.removeChild(imageChild);
+        modal.classList.remove("visible-full-screen-modal");
+      },
+      {once: true}
+    );
+  });
+});
