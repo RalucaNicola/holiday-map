@@ -6,7 +6,7 @@ import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 import LineLayerAnimation from "./lib/LineLayerAnimation";
 import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
 import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
-import {SimpleMarkerSymbol, TextSymbol} from "@arcgis/core/symbols";
+import {PathSymbol3DLayer, SimpleMarkerSymbol, TextSymbol} from "@arcgis/core/symbols";
 import LabelClass from "@arcgis/core/layers/support/LabelClass";
 import Compass from "@arcgis/core/widgets/Compass";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
@@ -77,19 +77,13 @@ const pois = new GeoJSONLayer({
 
 const filterFeatures = (filter: string) => {
   pois.definitionExpression = filter;
-
-  // = new FeatureEffect({
-  //   filter: new FeatureFilter({
-  //     where: filter,
-  //   }),
-  //   excludedEffect: "grayscale(100%) opacity(30%)",
-  // });
 };
 
 map.add(pois);
 
-const hikingLayer = new GeoJSONLayer({
-  url: "./data/hike.geojson",
+const pathsLayer = new GeoJSONLayer({
+  url: "./data/paths.geojson",
+  definitionExpression: "1=2",
   renderer: new UniqueValueRenderer({
     field: "type",
     defaultSymbol: new SimpleLineSymbol({
@@ -112,17 +106,16 @@ const hikingLayer = new GeoJSONLayer({
       },
     ],
   }),
-  visible: false,
 });
 
-map.add(hikingLayer);
+map.add(pathsLayer);
 
-const displayHike = (value: boolean) => {
-  hikingLayer.visible = value;
+const displayPaths = (filter: string) => {
+  pathsLayer.definitionExpression = filter;
 };
 
 const route = new GeoJSONLayer({
-  url: "./data/train-track.geojson",
+  url: "./data/animated-paths.geojson",
   renderer: new SimpleRenderer({
     symbol: new SimpleLineSymbol({
       width: 3,
@@ -162,9 +155,6 @@ const sectionAnimations = {
   "section-4": 2,
   "section-5": 3,
   "section-6": 4,
-  "section-8": 5,
-  "section-9": 6,
-  "section-10": 7,
 };
 let currentSectionId: null | string = null;
 let previousSectionId: null | string = null;
@@ -173,56 +163,60 @@ const setSection = (section: string | null) => {
   switch (section) {
     case "section-0":
       filterFeatures(`name IN ('Coronado Island', 'User Conference')`);
-      displayHike(false);
       goToSection(section);
+      displayPaths(`1=2`);
       break;
     case "section-1":
       filterFeatures(`name IN ('San Diego', 'Los Angeles')`);
-      displayHike(false);
       goToSection(section, 2500);
+      displayPaths(`1=2`);
       break;
     case "section-2":
       filterFeatures(`name IN ('Hollywood Bowl', 'Griffith Observatory', 'Santa Monica beach', 'Walk of Fame')`);
-      displayHike(false);
       goToSection(section);
+      displayPaths(`1=2`);
       break;
     case "section-3":
       filterFeatures(`name IN ('Laguna beach', 'Los Angeles')`);
       goToSection(section);
-      displayHike(false);
+      displayPaths(`1=2`);
       break;
     case "section-4":
       filterFeatures(`name IN ('Zuma beach', 'Los Angeles', 'Laguna beach')`);
+      displayPaths(`1=2`);
       goToSection(section);
-      displayHike(false);
       break;
     case "section-5":
       filterFeatures(`name IN ('Zuma beach','Santa Barbara', 'Los Angeles')`);
-      displayHike(false);
+      displayPaths(`1=2`);
       break;
     case "section-6":
       filterFeatures(`name IN ('Santa Barbara', 'Los Angeles', 'Pismo beach')`);
-      displayHike(false);
+      displayPaths(`1=2`);
       goToSection(section);
       break;
     case "section-7":
-      displayHike(true);
+      displayPaths(`name IN ('Pismo Beach - Big Sur', 'Big Sur hike')`);
       filterFeatures(
         `name IN ('Santa Barbara', 'Los Angeles', 'Pismo beach', 'Andrew Molera State Park', 'beautiful beach')`
       );
       goToSection(section, 4000);
       break;
     case "section-8":
-      displayHike(false);
+      displayPaths(`name IN ('Pismo Beach - Big Sur', 'Big Sur - Carmel')`);
       filterFeatures(`name IN ('Carmel by the Sea')`);
       goToSection(section, 4000);
       break;
     case "section-9":
       filterFeatures(`name IN ('Carmel by the Sea', 'Mission Dolores Park', '45th SF Marathon', 'Alcatraz Island')`);
+      displayPaths(`name IN ('Pismo Beach - Big Sur', 'Big Sur - Carmel', 'Carmel - San Francisco')`);
       goToSection(section, 4000);
       break;
     case "section-10":
       filterFeatures(`name IN ('Muir Woods National Monument', 'San Francisco')`);
+      displayPaths(
+        `name IN ('Pismo Beach - Big Sur', 'Big Sur - Carmel', 'Carmel - San Francisco', 'San Francisco - Muir')`
+      );
       goToSection(section, 2000);
       break;
     default:
