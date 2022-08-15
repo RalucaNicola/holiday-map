@@ -12,6 +12,8 @@ import Compass from "@arcgis/core/widgets/Compass";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 import WebScene from "@arcgis/core/WebScene";
 import SceneView from "@arcgis/core/views/SceneView";
+import Zoom from "@arcgis/core/widgets/Zoom";
+import Fullscreen from "@arcgis/core/widgets/Fullscreen";
 
 const map = new WebScene({
   portalItem: {
@@ -33,8 +35,14 @@ let compass = new Compass({
   view: view,
 });
 
+let fullscreen = new Fullscreen({
+  view: view,
+});
+view.ui.add(fullscreen, "top-right");
+
 // adds the compass to the top left corner of the MapView
 view.ui.add(compass, "top-left");
+view.ui.add(fullscreen, "top-right");
 
 const pois = new GeoJSONLayer({
   url: "./data/points.geojson",
@@ -199,7 +207,9 @@ const setSection = (section: string | null) => {
       break;
     case "section-7":
       displayHike(true);
-      filterFeatures(`name IN ('Andrew Molera State Park', 'beautiful beach')`);
+      filterFeatures(
+        `name IN ('Santa Barbara', 'Los Angeles', 'Pismo beach', 'Andrew Molera State Park', 'beautiful beach')`
+      );
       goToSection(section, 4000);
       break;
     case "section-8":
@@ -208,7 +218,7 @@ const setSection = (section: string | null) => {
       goToSection(section, 4000);
       break;
     case "section-9":
-      filterFeatures(`name IN ('Mission Dolores Park', '45th SF Marathon', 'Alcatraz Island')`);
+      filterFeatures(`name IN ('Carmel by the Sea', 'Mission Dolores Park', '45th SF Marathon', 'Alcatraz Island')`);
       goToSection(section, 4000);
       break;
     case "section-10":
@@ -216,8 +226,9 @@ const setSection = (section: string | null) => {
       goToSection(section, 2000);
       break;
     default:
-      filterFeatures(`name IN ('San Francisco', 'San Diego', 'Los Angeles', 'Santa Barbara', 'Carmel by the Sea')`);
-      console.log("filtering");
+      filterFeatures(
+        `name IN ('Muir Woods National Monument', 'San Francisco', 'San Diego', 'Los Angeles', 'Santa Barbara', 'Carmel by the Sea')`
+      );
       goToSection("intro", 1500);
       break;
   }
@@ -275,7 +286,6 @@ const calculateSectionsInfo = () => {
 };
 window.onscroll = e => {
   calculateSectionsInfo();
-  console.log(currentSectionId);
   render();
 };
 
