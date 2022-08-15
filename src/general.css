@@ -15,6 +15,21 @@ body {
   pointer-events: none;
 }
 
+.esri-view-surface {
+  box-shadow: inset 0 0 20px 20px #fff;
+}
+/* .esri-view-surface::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 0 !important;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 70%, rgba(255, 255, 255, 1) 90%);
+} */
+
 .full-cover-container {
   height: 100vh;
   text-align: center;
@@ -149,7 +164,7 @@ img {
 
 section {
   padding: 0 40px;
-  margin: 20px auto;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 

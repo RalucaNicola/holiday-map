@@ -186,6 +186,16 @@
         "type": "Point",
         "coordinates": [-122.42719888687135, 37.76002815396025]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "San Diego"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-117.17124938964842, 32.72548692347244]
+      }
     }
   ]
 }

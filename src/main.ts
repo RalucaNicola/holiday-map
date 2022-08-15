@@ -136,19 +136,15 @@ animation.whenAnimatedLayer().then(animatedLayer => {
 
 function getScrollProgress(element: HTMLElement) {
   const elemRect = element.getBoundingClientRect();
-
   const top = elemRect.top;
-  // map is covering up 30% of the window height
-  const windowHeight = 0.65 * window.innerHeight || document.documentElement.clientHeight;
-
-  const progress = Math.min(Math.max(windowHeight - top, 0.01), elemRect.height);
-  return progress / elemRect.height;
+  const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+  const progress = Math.min(Math.max((windowHeight / 2 - top) / elemRect.height, 0.0001), 1);
+  return progress;
 }
 
 interface SectionInfo {
   id: string;
-  top: number;
-  percentageTop: number;
+  current: boolean;
 }
 
 let sectionsInfo: SectionInfo[] = [];
@@ -165,27 +161,31 @@ const sectionAnimations = {
 let currentSectionId: null | string = null;
 let previousSectionId: null | string = null;
 
-const setSection = (section: string) => {
+const setSection = (section: string | null) => {
   switch (section) {
     case "section-0":
       filterFeatures(`name IN ('Coronado Island', 'User Conference')`);
       displayHike(false);
+      goToSection(section);
       break;
     case "section-1":
-      filterFeatures(`1=2`);
+      filterFeatures(`name IN ('San Diego', 'Los Angeles')`);
       displayHike(false);
+      goToSection(section, 2500);
       break;
     case "section-2":
       filterFeatures(`name IN ('Hollywood Bowl', 'Griffith Observatory', 'Santa Monica beach', 'Walk of Fame')`);
       displayHike(false);
+      goToSection(section);
       break;
     case "section-3":
       filterFeatures(`name IN ('Laguna beach', 'Los Angeles')`);
-      view.goTo(map.presentation.slides.getItemAt(3).viewpoint, {duration: 1500});
+      goToSection(section);
       displayHike(false);
       break;
     case "section-4":
-      filterFeatures(`name IN ('Zuma beach', 'Los Angeles')`);
+      filterFeatures(`name IN ('Zuma beach', 'Los Angeles', 'Laguna beach')`);
+      goToSection(section);
       displayHike(false);
       break;
     case "section-5":
@@ -195,52 +195,60 @@ const setSection = (section: string) => {
     case "section-6":
       filterFeatures(`name IN ('Santa Barbara', 'Los Angeles', 'Pismo beach')`);
       displayHike(false);
+      goToSection(section);
       break;
     case "section-7":
       displayHike(true);
       filterFeatures(`name IN ('Andrew Molera State Park', 'beautiful beach')`);
+      goToSection(section, 4000);
       break;
     case "section-8":
       displayHike(false);
       filterFeatures(`name IN ('Carmel by the Sea')`);
+      goToSection(section, 4000);
       break;
     case "section-9":
       filterFeatures(`name IN ('Mission Dolores Park', '45th SF Marathon', 'Alcatraz Island')`);
+      goToSection(section, 4000);
       break;
     case "section-10":
       filterFeatures(`name IN ('Muir Woods National Monument', 'San Francisco')`);
+      goToSection(section, 2000);
       break;
-  }
-
-  if (section) {
-    view.goTo(
-      map.presentation.slides
-        .filter(s => {
-          return s.title.text === section;
-        })
-        .getItemAt(0).viewpoint,
-      {duration: 1500}
-    );
+    default:
+      filterFeatures(`name IN ('San Francisco', 'San Diego', 'Los Angeles', 'Santa Barbara', 'Carmel by the Sea')`);
+      console.log("filtering");
+      goToSection("intro", 1500);
+      break;
   }
 };
 
+function goToSection(title: string, duration = 1500) {
+  view.goTo(
+    map.presentation.slides
+      .filter(s => {
+        return s.title.text === title;
+      })
+      .getItemAt(0).viewpoint,
+    {duration}
+  );
+}
+
 const render = () => {
-  if (currentSectionId) {
-    if (currentSectionId === previousSectionId) {
-      if (typeof sectionAnimations[currentSectionId] !== "undefined") {
-        route.queryObjectIds().then(function (objectIds) {
-          const id = sectionAnimations[currentSectionId as string];
-          const routeObjectId = objectIds[id];
-          if (typeof routeObjectId !== "undefined" && currentSectionId) {
-            const scrollProgress = getScrollProgress(document.getElementById(currentSectionId) as HTMLElement);
-            animation.seek(scrollProgress, routeObjectId);
-          }
-        });
-      }
-    } else {
-      previousSectionId = currentSectionId;
-      setSection(currentSectionId);
+  if (currentSectionId && currentSectionId === previousSectionId) {
+    if (typeof sectionAnimations[currentSectionId] !== "undefined") {
+      route.queryObjectIds().then(function (objectIds) {
+        const id = sectionAnimations[currentSectionId as string];
+        const routeObjectId = objectIds[id];
+        if (typeof routeObjectId !== "undefined" && currentSectionId) {
+          const scrollProgress = getScrollProgress(document.getElementById(currentSectionId) as HTMLElement);
+          animation.seek(scrollProgress, routeObjectId);
+        }
+      });
     }
+  } else {
+    previousSectionId = currentSectionId;
+    setSection(currentSectionId);
   }
 };
 
@@ -251,19 +259,23 @@ const calculateSectionsInfo = () => {
   sectionsInfo = sectionsArray.map(section => {
     const sectionRect = section.getBoundingClientRect();
     const top = sectionRect.top;
-    const percentageTop = top / windowHeight;
-    if (percentageTop < 0.7) {
-      currentSectionId = section.id;
-    }
-    return {
+    const sectionInfo = {
       id: section.id,
-      top,
-      percentageTop,
+      current: false,
     };
+    const percentage = (windowHeight / 2 - top) / sectionRect.height;
+    if (percentage >= 0 && percentage <= 1) {
+      sectionInfo.current = true;
+    }
+    return sectionInfo;
   });
+
+  const currentSection = sectionsInfo.filter(s => s.current === true)[0];
+  currentSectionId = currentSection ? currentSection.id : null;
 };
 window.onscroll = e => {
   calculateSectionsInfo();
+  console.log(currentSectionId);
   render();
 };
 
