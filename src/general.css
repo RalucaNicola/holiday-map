@@ -170,6 +170,17 @@ p {
   line-height: 1.65;
 }
 
+a {
+  color: #f31e91;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.5s linear;
+}
+
+a:hover {
+  color: #971ef3;
+}
+
 section h2,
 section h3,
 section p,
@@ -190,6 +201,22 @@ section .annotation {
 }
 .desktop {
   display: inherit;
+}
+
+.credits {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-size: 0.9rem;
+  line-height: 1.5rem;
+}
+
+.credits > div:nth-child(2n) {
+  text-align: left;
+  padding-left: 10px;
+}
+
+.credits > div:nth-child(2n + 1) {
+  text-align: right;
 }
 
 @media (max-width: 700px) {
