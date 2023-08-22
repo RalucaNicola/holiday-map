@@ -6,7 +6,7 @@ import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 import LineLayerAnimation from "./lib/LineLayerAnimation";
 import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
 import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
-import {PathSymbol3DLayer, SimpleMarkerSymbol, TextSymbol} from "@arcgis/core/symbols";
+import { PathSymbol3DLayer, SimpleMarkerSymbol, TextSymbol } from "@arcgis/core/symbols";
 import LabelClass from "@arcgis/core/layers/support/LabelClass";
 import Compass from "@arcgis/core/widgets/Compass";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
@@ -15,17 +15,15 @@ import SceneView from "@arcgis/core/views/SceneView";
 import Zoom from "@arcgis/core/widgets/Zoom";
 import Fullscreen from "@arcgis/core/widgets/Fullscreen";
 
-const map = new WebScene({
+const map = new WebMap({
   portalItem: {
-    //id: "02bae9c8de294eabaa91972b14394ecc",
-    id: "72966e78b41946d8a2d549691d972900",
+    id: "02bae9c8de294eabaa91972b14394ecc",
   },
 });
 
-const view = new SceneView({
+const view = new MapView({
   container: "viewDiv",
   map,
-  qualityProfile: "high",
   ui: {
     components: [],
   },
@@ -59,7 +57,7 @@ const pois = new GeoJSONLayer({
   }),
   labelingInfo: [
     new LabelClass({
-      labelExpressionInfo: {expression: "$feature.name"},
+      labelExpressionInfo: { expression: "$feature.name" },
       labelPlacement: "center-right",
       symbol: new TextSymbol({
         color: [255, 255, 255, 1],
@@ -88,7 +86,7 @@ const pathsLayer = new GeoJSONLayer({
     field: "type",
     defaultSymbol: new SimpleLineSymbol({
       width: 3,
-      color: [255, 255, 255],
+      color: [255, 0, 0],
       style: "short-dash",
       cap: "round",
       join: "round",
@@ -98,7 +96,7 @@ const pathsLayer = new GeoJSONLayer({
         value: "road",
         symbol: new SimpleLineSymbol({
           width: 3,
-          color: [255, 255, 255],
+          color: [255, 0, 0],
           style: "solid",
           cap: "round",
           join: "round",
@@ -119,7 +117,7 @@ const route = new GeoJSONLayer({
   renderer: new SimpleRenderer({
     symbol: new SimpleLineSymbol({
       width: 3,
-      color: [255, 255, 255],
+      color: [255, 0, 0],
       style: "solid",
       cap: "round",
       join: "round",
@@ -230,12 +228,12 @@ const setSection = (section: string | null) => {
 
 function goToSection(title: string, duration = 1500) {
   view.goTo(
-    map.presentation.slides
+    map.bookmarks
       .filter(s => {
-        return s.title.text === title;
+        return s.name === title;
       })
       .getItemAt(0).viewpoint,
-    {duration}
+    { duration }
   );
 }
 
@@ -295,7 +293,7 @@ document.querySelectorAll(".media>img").forEach(element => {
         modal.removeChild(imageChild);
         modal.classList.remove("visible-full-screen-modal");
       },
-      {once: true}
+      { once: true }
     );
   });
 });
