@@ -1,0 +1,1 @@
+import{dW as r,cs as c}from"./vendor.c414a8c9.js";const i=96;function a(t,n){const e=n||t.extent,o=t.width,s=c(e&&e.spatialReference);return e&&o?e.width/o*s*r*i:0}function d(t,n){return t/(c(n)*r*i)}export{d as i,a as r};
